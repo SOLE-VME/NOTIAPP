@@ -1,0 +1,97 @@
+/* Estilo para texto sin efecto neón */
+.normal-text {
+    color: #ffffff; 
+    font-weight: bold; 
+    
+}
+
+/* Efecto de Fondo */
+.neon-bg {
+    background: linear-gradient(145deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
+    border: 2px solid #0ff; 
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); 
+    
+}
+
+/* Estilo de Tarjeta */
+.neon-card {
+    border: 2px solid #0ff; 
+    background: rgba(124, 118, 118, 0.788); 
+    color: #fff ; 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7); 
+}
+
+
+
+/* Títulos Animados */
+@keyframes neon {
+    0% { text-shadow: 
+        0 0 5px #0ff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff, 
+        0 0 20px #0ff, 
+        0 0 25px #0ff, 
+        0 0 30px #0ff, 
+        0 0 35px #0ff; 
+    }
+    50% { text-shadow: 
+        0 0 10px #0ff, 
+        0 0 20px #0ff, 
+        0 0 30px #0ff, 
+        0 0 40px #0ff, 
+        0 0 50px #0ff, 
+        0 0 60px #0ff, 
+        0 0 70px #0ff; 
+    }
+    100% { text-shadow: 
+        0 0 5px #0ff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff, 
+        0 0 20px #0ff, 
+        0 0 25px #0ff, 
+        0 0 30px #0ff, 
+        0 0 35px #0ff; 
+    }
+}
+
+.animate-title {
+    animation: neon 1.5s infinite alternate; 
+}
+
+/* Estilo del Botón Neón */
+.neon-btn {
+    color: #0ff;
+    background-color: transparent;
+    border: 2px solid #0ff; 
+    box-shadow: 0 0 10px #0ff; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+    padding: 10px 20px; 
+}
+
+.neon-btn:hover {
+    background-color: #0ff;
+    color: #ffffff;
+    border-color: #0ff; 
+}
+
+
+/* Ajustar imagen al contenedor */
+
+.card-img-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden; 
+}
+
+.card-img-top {
+    display: block;
+    width: 100%;
+    height: auto; 
+    object-fit: cover; 
+}
+
+.neon-img {
+    border-bottom: 3px solid #0ff; 
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7); 
+}
