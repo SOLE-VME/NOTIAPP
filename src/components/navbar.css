@@ -1,0 +1,63 @@
+/* Estilo de la barra de navegación */
+.neon-nav {
+    background-color: rgba(0, 0, 0, 0.7); 
+    border-bottom: 2px solid #0ff; 
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7); 
+    font-weight: bold;
+}
+
+/* Efecto de texto neón */
+.neon-text {
+    color: #0ff; 
+    text-shadow: 
+        0 0 5px #0ff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff, 
+        0 0 20px #0ff; 
+    transition: color 0.3s ease; 
+}
+
+/* Animación de texto neón */
+@keyframes neon {
+    0% { text-shadow: 
+        0 0 5px #0ff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff, 
+        0 0 20px #0ff; 
+    }
+    50% { text-shadow: 
+        0 0 10px #0ff, 
+        0 0 20px #0ff, 
+        0 0 30px #0ff, 
+        0 0 40px #0ff; 
+    }
+    100% { text-shadow: 
+        0 0 5px #0ff, 
+        0 0 10px #0ff, 
+        0 0 15px #0ff, 
+        0 0 20px #0ff; 
+    }
+}
+
+/* Aplica la animación al texto */
+.neon-text {
+    animation: neon 1.5s infinite alternate;
+}
+
+/* Estilo del botón neón */
+.neon-btn {
+    color: #0ff;
+    background: rgba(124, 118, 118, 0.788);
+    border: 2px solid #0ff;
+    box-shadow: 0 0 10px #0ff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+/* Efecto hover del botón */
+.neon-btn:hover {
+    background-color: #0ff;
+    color: #ffffff;
+    border-color: #0ff;
+}
