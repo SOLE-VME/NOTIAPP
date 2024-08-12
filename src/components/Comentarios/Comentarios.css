@@ -1,0 +1,122 @@
+body {
+    background-color: #202020;
+    color: #ffffff; 
+    font-family: 'Roboto', sans-serif; 
+}
+
+.container {
+    padding: 20px;
+    
+}
+
+.list-group-item {
+    background-color: #5c5a5a; 
+    border: 1px solid #ffffff; 
+    color: #ffffff; 
+    border-radius: 5px;
+    margin-bottom: 10px; 
+    padding: 10px; 
+}
+
+/* Estilo para el texto dentro de los comentarios */
+.list-group-item div {
+    color: #ffffff; 
+}
+
+/* Estilo de la tarjeta del formulario */
+.card {
+    background-color: #5c5a5a;; 
+    color: #ffffff; 
+    border-radius: 10px;
+    border: 1px solid #444; 
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); 
+    animation: neonAnimation 1.5s infinite alternate; 
+}
+
+/* Estilo del encabezado de la tarjeta */
+.card-header h5 {
+    color: #00ffcc; 
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc; 
+    margin: 0;
+    
+}
+
+/* Estilo del área de texto del formulario */
+.form-control {
+    background-color: #5c5a5a;
+    border: 1px solid #555; 
+    color: #e0e0e0; 
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); 
+    transition: box-shadow 0.3s ease-in-out; 
+}
+
+/* Estilo del área de texto al enfocarse */
+.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8); 
+}
+
+/* Estilo del botón primario */
+.btn-primary {
+    background-color: #ff00ff; 
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.7); 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+/* Estilo del botón primario al pasar el ratón */
+.btn-primary:hover {
+    background-color: #e600e6; 
+    transform: scale(1.05); 
+}
+
+/* Estilo del botón secundario */
+.btn-secondary {
+    background-color: #666; 
+    border: none;
+    color: #fff; 
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+/* Estilo del botón secundario al pasar el ratón */
+.btn-secondary:hover {
+    background-color: #444; 
+    transform: scale(1.05); 
+}
+
+
+/* Estilo de las alertas de error */
+.alert-danger {
+    background-color: #ff4d4d; 
+    color: #fff; 
+    border: 1px solid #ff0000; 
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.7); 
+    border-radius: 5px;
+}
+
+/* Estilo de los comentarios publicados */
+.comment {
+    color: #ffffff; 
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff; 
+    padding: 10px;
+    border-bottom: 1px solid #333; 
+}
+
+/* Animación de parpadeo */
+@keyframes neonAnimation {
+    0% {
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(0, 255, 255, 1);
+    }
+}
