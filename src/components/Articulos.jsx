@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchArticles } from "../hooks/ArticlesCon";
 import { fetchCategories } from "../hooks/CategoryCon";
-import './Profiles/styles.css'; 
+import './Profiles/EditProfile.css'; 
 
 const placeholderImage = "https://colegioteo.cl/imagenes/noticias/550x600/sin_imagen.jpg";
-const articlesPerPage = 10; // Número de artículos por página
+const articlesPerPage = 10; 
 
 export const Articulos = () => {
     const [articles, setArticles] = useState([]);
@@ -16,6 +16,7 @@ export const Articulos = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [nextPage, setNextPage] = useState(null);
     const [prevPage, setPrevPage] = useState(null);
+    const [totalPages, setTotalPages] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,13 +25,16 @@ export const Articulos = () => {
                 setLoading(true);
                 setError(null);
                 
-                const articlesData = await fetchArticles(page);
+                // Cargar los artículos y ordenarlos por fecha de creación en orden descendente
+                const articlesData = await fetchArticles(page, articlesPerPage);
                 const sortedArticles = articlesData.articles.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                 setArticles(sortedArticles);
                 setTotalCount(articlesData.totalCount);
                 setNextPage(articlesData.nextPage);
                 setPrevPage(articlesData.prevPage);
+                setTotalPages(Math.ceil(articlesData.totalCount / articlesPerPage));
 
+                // Cargar las categorías
                 const categoriesData = await fetchCategories();
                 setCategories(categoriesData); 
             } catch (err) {
@@ -51,6 +55,14 @@ export const Articulos = () => {
         if (prevPage) setPage(Number(prevPage));
     };
 
+    const handleFirstPage = () => {
+        setPage(1);
+    };
+
+    const handleFinalPage = () => {
+        setPage(totalPages);
+    };
+
     const handleNuevoArticulo = () => {
         navigate("/articles/nuevo-articulo");
     };
@@ -59,9 +71,6 @@ export const Articulos = () => {
         const category = categories.find(cat => cat.id === id);
         return category ? category.name : "Desconocida";
     };
-
-    // Calculamos el total de páginas
-    const totalPages = Math.ceil(totalCount / articlesPerPage);
 
     return (
         <div className="container neon-bg">
@@ -93,9 +102,11 @@ export const Articulos = () => {
                                     />
                                     <div className="card-body d-flex flex-column">
                                         <h5 className="card-title neon-title">{article.title}</h5>
-                                        <p className>{article.abstract}</p>
+                                        {/* Mostrar el resumen del artículo */}
+                                        <p className="card-text">{article.abstract}</p>
+                                        {/* Mostrar la fecha de publicación */}
                                         <p className="card-text mt-auto">
-                                            <small className>Publicado: {new Date(article.created_at).toLocaleDateString()}</small>
+                                            <small className="neon-text">Publicado: {new Date(article.created_at).toLocaleDateString()}</small>
                                         </p>
                                         {article.categories && article.categories.length > 0 && (
                                             <div className="mb-2">
@@ -143,24 +154,38 @@ export const Articulos = () => {
                     </div>
                     <nav aria-label="Page navigation">
                         <ul className="pagination justify-content-center">
-                            {prevPage && (
-                                <li className="page-item">
-                                    <button className="page-link neon-btn" onClick={handlePrevPage}>
-                                        Página Anterior
-                                    </button>
-                                </li>
+                            {page > 1 && (
+                                <>
+                                    <li className="page-item">
+                                        <button className="page-link neon-btn" onClick={handleFirstPage}>
+                                            Primera Página
+                                        </button>
+                                    </li>
+                                    <li className="page-item">
+                                        <button className="page-link neon-btn" onClick={handlePrevPage}>
+                                            Página Anterior
+                                        </button>
+                                    </li>
+                                </>
                             )}
                             <li className="page-item disabled">
                                 <span className="page-link neon-text">
                                     Página {page} de {totalPages}
                                 </span>
                             </li>
-                            {nextPage && (
-                                <li className="page-item">
-                                    <button className="page-link neon-btn" onClick={handleNextPage}>
-                                        Página Siguiente
-                                    </button>
-                                </li>
+                            {page < totalPages && (
+                                <>
+                                    <li className="page-item">
+                                        <button className="page-link neon-btn" onClick={handleNextPage}>
+                                            Página Siguiente
+                                        </button>
+                                    </li>
+                                    <li className="page-item">
+                                        <button className="page-link neon-btn" onClick={handleFinalPage}>
+                                            Última Página
+                                        </button>
+                                    </li>
+                                </>
                             )}
                         </ul>
                     </nav>
