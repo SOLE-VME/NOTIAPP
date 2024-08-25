@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { fetchCrearArticulo } from "../../hooks/ArticlesCon";
 import { fetchCategories } from "../../hooks/CategoryCon";
+import { fetchProfileData } from '../../hooks/useFetchProfile'; 
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext'; 
 
 export const CrearArticulo = () => {
+    const { auth } = useContext(AuthContext);
     const [title, setTitle] = useState("");
     const [abstract, setAbstract] = useState("");
     const [content, setContent] = useState("");
     const [caption, setCaption] = useState("");
     const [image, setImage] = useState(null);
     const [author, setAuthor] = useState(""); 
-    const [categories, setCategories] = useState([]); // Inicializa como un array vacío
-    const [selectedCategories, setSelectedCategories] = useState([]); // Categorías seleccionadas
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
@@ -23,10 +27,21 @@ export const CrearArticulo = () => {
                 setError("Error al cargar las categorías");
             }
         };
-    
+
+        const loadProfile = async () => {
+            try {
+                const data = await fetchProfileData();
+                setAuthor(`${data.first_name} ${data.last_name}`);
+            } catch (err) {
+                setError("Error al cargar el perfil");
+            }
+        };
+
         loadCategories();
-    }, []);
-    
+        if (auth.isAuthenticated) {
+            loadProfile();
+        }
+    }, [auth.isAuthenticated]);
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
@@ -48,7 +63,7 @@ export const CrearArticulo = () => {
         formData.append("content", content);
         formData.append("caption", caption);
         formData.append("author", author); 
-        formData.append("categories", JSON.stringify(selectedCategories)); // Incluir categorías seleccionadas como JSON
+        formData.append("categories", JSON.stringify(selectedCategories));
         if (image) {
             formData.append("image", image);
         }
@@ -60,9 +75,8 @@ export const CrearArticulo = () => {
             setAbstract("");
             setContent("");
             setCaption("");
-            setAuthor("");
             setImage(null);
-            setSelectedCategories([]); // Reiniciar las categorías seleccionadas
+            setSelectedCategories([]);
         } catch (err) {
             setError(err.message);
         }
@@ -127,6 +141,8 @@ export const CrearArticulo = () => {
                         onChange={(e) => setAuthor(e.target.value)}
                         required
                         maxLength="255"
+                        disabled // Deshabilitado para evitar cambios manuales
+                        style={{ color: 'black' }}
                     />
                 </div>
                 <div className="mb-3">
@@ -149,7 +165,6 @@ export const CrearArticulo = () => {
                             ))
                         )}
                     </select>
-
                 </div>
                 <div className="mb-3">
                     <label htmlFor="image" className="form-label">Imagen</label>
