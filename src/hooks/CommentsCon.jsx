@@ -1,10 +1,9 @@
 export const fetchComentarios = async (articleId) => {
-    const token = localStorage.getItem("authToken");
     const response = await fetch(`https://sandbox.academiadevelopers.com/infosphere/comments/?article=${articleId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: token ? `Token ${token}` : "",
+            
         },
     });
 
@@ -15,6 +14,7 @@ export const fetchComentarios = async (articleId) => {
     const data = await response.json();
     return data; 
 };
+
 
 
 export const fetchCrearComentario = async (articleId, content, token) => {
