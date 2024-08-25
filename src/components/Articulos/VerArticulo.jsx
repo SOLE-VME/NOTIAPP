@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { fetchArticle, fetchEliminarArticulo } from "../../hooks/ArticlesCon";
-import { CrearComentario } from "../Comentarios/CrearComentarios";
+import { CrearComentario } from "../Comentarios/CrearComentario";
+import '../Profiles/EditProfile.css';  // Asegúrate de que el archivo CSS tenga las reglas necesarias
 
 const placeholderImage = "https://colegioteo.cl/imagenes/noticias/550x600/sin_imagen.jpg";
 
@@ -14,6 +15,11 @@ export const VerArticulo = () => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Estado para manejar la edición de comentarios
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editCommentContent, setEditCommentContent] = useState('');
+    const [commentToDelete, setCommentToDelete] = useState(null);
 
     useEffect(() => {
         const loadArticle = async () => {
@@ -78,6 +84,46 @@ export const VerArticulo = () => {
         setComments([newComment, ...comments]);
     };
 
+    const handleEditComment = (comment) => {
+        setEditingCommentId(comment.id);
+        setEditCommentContent(comment.content);
+    };
+
+    const handleSaveEditComment = async () => {
+        try {
+            await fetch(`https://sandbox.academiadevelopers.com/infosphere/comments/${editingCommentId}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${auth.token}`
+                },
+                body: JSON.stringify({ content: editCommentContent })
+            });
+            setComments(comments.map(comment => 
+                comment.id === editingCommentId ? { ...comment, content: editCommentContent } : comment
+            ));
+            setEditingCommentId(null);
+            setEditCommentContent('');
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleDeleteComment = async () => {
+        try {
+            await fetch(`https://sandbox.academiadevelopers.com/infosphere/comments/${commentToDelete}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${auth.token}`
+                }
+            });
+            setComments(comments.filter(comment => comment.id !== commentToDelete));
+            setCommentToDelete(null);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     if (loading) {
         return (
             <div className="d-flex justify-content-center">
@@ -121,15 +167,18 @@ export const VerArticulo = () => {
                             <p className="card-text">{article.abstract}</p>
                             <p className="card-text">{article.content}</p>
                             <p className="card-text">
-                                <small className="text-muted">Creado: {new Date(article.created_at).toLocaleDateString()}</small>
+                                <small className="text-white">Creado: {new Date(article.created_at).toLocaleDateString()}</small>
                             </p>
                             <p className="card-text">
-                                <small className="text-muted">Actualizado: {new Date(article.updated_at).toLocaleDateString()}</small>
+                                <small className="text-white">Actualizado: {new Date(article.updated_at).toLocaleDateString()}</small>
                             </p>
                             <p className="card-text">
-                                <small className="text-muted">Vistas: {article.view_count}</small>
+                                <small className="text-white">Vistas: {article.view_count}</small>
                             </p>
-                            
+                            <p className="card-text">
+                                <small className="text-white">Autor: {article.author}</small>
+                            </p>
+
                             {article.categories && article.categories.length > 0 && (
                                 <div className="mb-3">
                                     <h6 className="neon-title">Categorías:</h6>
@@ -154,22 +203,10 @@ export const VerArticulo = () => {
                                     </ul>
                                 </div>
                             )}
-                            {article.reactions && article.reactions.length > 0 && (
-                                <div className="mb-3">
-                                    <h6 className="neon-title">Reacciones:</h6>
-                                    <ul className="list-unstyled">
-                                        {article.reactions.map((reaction) => (
-                                            <li key={reaction} className="badge bg-success me-1">
-                                                {reaction}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
                         </div>
                         <div className="card-footer text-muted text-center">
                             <button onClick={handleVolver} className="btn neon-btn me-2">Volver</button>
-                            {auth.isAuthenticated && (
+                            {auth.isAuthenticated && article.author === 162 &&(
                                 <>
                                     <button onClick={handleEditarArticulo} className="btn neon-btn me-2">Editar Artículo</button>
                                     <button onClick={handleEliminarArticulo} className="btn neon-btn">Eliminar Artículo</button>
@@ -178,7 +215,7 @@ export const VerArticulo = () => {
                         </div>
                     </div>
                     {auth.isAuthenticated && (
-                        <CrearComentario articleId={id} onCommentCreated={handleCommentCreated} />
+                        <CrearComentario articleId={id} onCommentCreated={handleCommentCreated} comments={comments} setComments={setComments} />
                     )}
                     <div className="mt-4">
                         <h4 className="neon-title">Comentarios:</h4>
@@ -190,15 +227,41 @@ export const VerArticulo = () => {
                                     <li key={comment.id} className="mb-3">
                                         <div className="card neon-comment">
                                             <div className="card-body">
-                                                <p className="card-text">{comment.content}</p>
-                                                <p className="card-text">
-                                                    <small className="text-muted">Publicado el {new Date(comment.created_at).toLocaleDateString()}</small>
-                                                </p>
+                                                {editingCommentId === comment.id ? (
+                                                    <>
+                                                        <textarea
+                                                            value={editCommentContent}
+                                                            onChange={(e) => setEditCommentContent(e.target.value)}
+                                                        />
+                                                        <button onClick={handleSaveEditComment} className="btn neon-btn me-2">Guardar</button>
+                                                        <button onClick={() => setEditingCommentId(null)} className="btn neon-btn">Cancelar</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <p className="card-text">{comment.content}</p>
+                                                        <p className="card-text">
+                                                            <small className="text-muted">Publicado por {comment.author} el {new Date(comment.created_at).toLocaleDateString()}</small>
+                                                        </p>
+                                                        {auth.isAuthenticated && comment.author === 162 && (
+                                                            <>
+                                                                <button onClick={() => handleEditComment(comment)} className="btn neon-btn me-2">Editar</button>
+                                                                <button onClick={() => setCommentToDelete(comment.id)} className="btn neon-btn me-2">Eliminar</button>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
+                        )}
+                        {commentToDelete && (
+                            <div className="alert alert-warning" role="alert">
+                                <p>¿Estás seguro de que deseas eliminar este comentario?</p>
+                                <button onClick={handleDeleteComment} className="btn btn-danger">Eliminar</button>
+                                <button onClick={() => setCommentToDelete(null)} className="btn btn-secondary ms-2">Cancelar</button>
+                            </div>
                         )}
                     </div>
                 </>
