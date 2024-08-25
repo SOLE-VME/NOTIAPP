@@ -1,6 +1,5 @@
-// Comentarios.jsx
 import React, { useState, useEffect } from 'react';
-import { fetchComentarios, eliminarComentario } from '../../hooks/CommentsCon';
+import { fetchComentarios, eliminarComentario, editarComentario } from '../../hooks/CommentsCon';
 import EditarComentario from './EditarComentario'; 
 import './Comentarios.css';
 
@@ -10,6 +9,7 @@ const Comentarios = () => {
     const [error, setError] = useState(null);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [editedContent, setEditedContent] = useState("");
 
     useEffect(() => {
         const loadComments = async () => {
@@ -37,19 +37,28 @@ const Comentarios = () => {
         }
     };
 
-    const handleEdit = (commentId) => {
+    const handleEdit = (commentId, content) => {
         setEditingCommentId(commentId);
+        setEditedContent(content);
         setShowEditModal(true);
     };
 
     const handleCloseEditModal = () => {
         setShowEditModal(false);
         setEditingCommentId(null);
+        setEditedContent("");
     };
 
-    const handleSaveEdit = () => {
-        handleCloseEditModal();
-      
+    const handleSaveEdit = async () => {
+        try {
+            await editarComentario(editingCommentId, editedContent);
+            setComments(comments.map(comment => 
+                comment.id === editingCommentId ? { ...comment, content: editedContent } : comment
+            ));
+            handleCloseEditModal();
+        } catch (err) {
+            setError('Error al editar el comentario');
+        }
     };
 
     if (loading) {
@@ -85,7 +94,7 @@ const Comentarios = () => {
                                 <button
                                     type="button"
                                     className="btn btn-secondary"
-                                    onClick={() => handleEdit(comment.id)}
+                                    onClick={() => handleEdit(comment.id, comment.content)}
                                 >
                                     Editar
                                 </button>
@@ -108,8 +117,10 @@ const Comentarios = () => {
             {showEditModal && (
                 <EditarComentario
                     comentarioId={editingCommentId}
+                    content={editedContent}
                     onClose={handleCloseEditModal}
                     onSave={handleSaveEdit}
+                    onContentChange={(e) => setEditedContent(e.target.value)}
                 />
             )}
         </div>
