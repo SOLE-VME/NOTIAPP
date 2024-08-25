@@ -1,0 +1,113 @@
+/* Contenedor del perfil */
+.edit-profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid #00ffff; /* Borde de color neón */
+    border-radius: 8px;
+    background-color: #1e1e1e; /* Fondo oscuro */
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* Efecto de resplandor */
+    position: relative;
+    overflow: hidden;
+    animation: pulse-background 2s infinite; /* Animación de fondo pulsante */
+}
+
+/* Animación de fondo pulsante */
+@keyframes pulse-background {
+    0% {
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+}
+
+/* Estilo para etiquetas */
+label {
+    display: block;
+    margin-bottom: 15px;
+    color: #00ffff; /* Color del texto en neón */
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.8); /* Efecto de resplandor en el texto */
+}
+
+/* Estilo para los inputs */
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 2px solid #00ffff; /* Borde neón */
+    border-radius: 4px;
+    background-color: #333; /* Fondo oscuro */
+    color: #fff; /* Color del texto */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); /* Efecto de resplandor */
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+/* Efecto en foco para inputs */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #00ffff; /* Color del borde en foco */
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); /* Efecto de resplandor en foco */
+}
+
+/* Estilo para el botón */
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: 2px solid #00ffff; /* Borde neón */
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Efecto de resplandor para el botón */
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    animation: pulse-button 2s infinite;
+}
+
+/* Animación de pulsación del botón */
+@keyframes pulse-button {
+    0% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0.3;
+    }
+}
+
+  
+  .profile-image {
+    width: 150px; /* Ajusta según el tamaño deseado */
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
