@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
-import { fetchArticle, fetchActualizarArticulo } from "../../hooks/ArticlesCon";
+import { fetchArticle, fetchActualizarArticulo } from "../../hooks/ArticlesCon"; 
 
 export const EditarArticulo = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { auth } = useContext(AuthContext); // Obtener el usuario autenticado
     const [article, setArticle] = useState(null);
     const [title, setTitle] = useState("");
     const [abstract, setAbstract] = useState("");
@@ -21,24 +19,24 @@ export const EditarArticulo = () => {
                 setLoading(true);
                 setError(null);
                 const data = await fetchArticle(id);
-                if (data.authorId !== auth.userId) { // Verifica que el artículo pertenece al usuario autenticado
-                    navigate('/not-authorized'); // Redirige a una página de no autorizado o similar
-                    return;
+                if (data) {
+                    setArticle(data);
+                    setTitle(data.title);
+                    setAbstract(data.abstract || "");
+                    setContent(data.content);
+                    setCaption(data.caption || "");
+                } else {
+                    throw new Error("El artículo no se encontró.");
                 }
-                setArticle(data);
-                setTitle(data.title);
-                setAbstract(data.abstract || "");
-                setContent(data.content);
-                setCaption(data.caption || "");
             } catch (err) {
-                setError("Error al cargar el artículo");
+                setError("Error al cargar el artículo: " + err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         loadArticle();
-    }, [id, auth.userId, navigate]);
+    }, [id]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -46,7 +44,7 @@ export const EditarArticulo = () => {
             await fetchActualizarArticulo(id, { title, abstract, content, caption });
             navigate(`/articles/${id}`);
         } catch (err) {
-            setError("Error al actualizar el artículo");
+            setError("Error al actualizar el artículo: " + err.message);
         }
     };
 
