@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext, AuthProvider } from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import './navbar.css';
 
 const Navbar = () => {
@@ -19,9 +19,7 @@ const Navbar = () => {
             {auth.isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <AuthProvider>
-                    <Link className="nav-link neon-text" to="/perfil">Ver Perfiles</Link>
-                  </AuthProvider>
+                  <Link className="nav-link neon-text" to="/my-profile">Mi Perfil</Link>
                 </li>
                 <li className="nav-item">
                   <button className="nav-link btn btn-link neon-text neon-btn" onClick={logout}>Cerrar Sesión</button>
