@@ -1,4 +1,3 @@
-// EditarComentario.jsx
 import React, { useState, useEffect } from 'react';
 import { fetchComentario, actualizarComentario } from '../../hooks/CommentsCon'; 
 
