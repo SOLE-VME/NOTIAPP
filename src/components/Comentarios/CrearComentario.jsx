@@ -142,7 +142,3 @@ export const CrearComentario = ({ articleId, onCommentCreated, comments, setComm
         </div>
     );
 };
-        </div>
-    );
-};
-
